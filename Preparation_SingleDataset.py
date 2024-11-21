@@ -3,7 +3,8 @@
 ##
 ## Description: Select data to be prepared for hot spot analysis
 ##
-## Usage: Transform Excel to Table (.dbf), make points from the XY coordinates, and project.
+## Usage: Transform Excel to Table (.dbf), make points from the XY coordinates,
+# #       and check the coordinate system.
 ##
 ## Created: Fall 2024
 ## Author: maia.griffith@duke.edu (for ENV859)
@@ -12,6 +13,7 @@
 ##------Set Up------
 
 # Load relevant packages
+import os
 import sys
 import arcpy
 
@@ -23,14 +25,32 @@ import arcpy
 dataset = "V:\\859FinalProject_mhg29\\BassConnections_OrphanHotspots\\Data\\Orphan_Ele_Movement_Data\\Batoka_move_SubsetDry_Sept_Nov.xlsx" 
 scratch = "V:\\859FinalProject_mhg29\\BassConnections_OrphanHotspots\\Scratch"
 output = "V:\\859FinalProject_mhg29\\BassConnections_OrphanHotspots\\Outputs"
+name = os.path.splitext(os.path.basename(dataset))[0] #Save only the base file name
 
 # Set environment settings
 arcpy.env.overwriteOutput = True #Make sure to exit interaction window in VS Code before re-running code
 arcpy.EnvManager(scratchWorkspace= scratch, workspace= output)
+arcpy.env.outputCoordinateSystem = arcpy.SpatialReference("WGS_1984_UTM_Zone_35S")
 
 # Create a describe object with the dataset
-dsc = arcpy.da.Describe(dataset) #Creating the "Describe" object
-##print(dsc.keys()) #Uncomment to see keys
+dsc_dataset = arcpy.da.Describe(dataset) #Creating the "Describe" object
+###print(dsc.keys()) #Uncomment to see keys
 
 # Indicate catalogPath directory
-arcpy.AddMessage(f"The dataset's catalog path is: {dsc['catalogPath']}")
+arcpy.AddMessage(f"The dataset's catalog path is: {dsc_dataset['catalogPath']}")
+###print(f"The dataset's catalog path is: {dsc['catalogPath']}")
+
+# Convert selected data set using: Excel To Table
+Output_Table = f"{scratch}\\{name}_Table.dbf"
+arcpy.conversion.ExcelToTable(Input_Excel_File= dataset, Output_Table= Output_Table)
+
+# Convert new table into points using: XY Table To Point
+dataset_points = f"{scratch}\\{name}_Points.shp"
+arcpy.management.XYTableToPoint(in_table= Output_Table, 
+                                out_feature_class= dataset_points, 
+                                x_field="Longitude", y_field="Latitude")
+
+    # Check the spatial reference of the new shapefile
+dsc_points = arcpy.da.Describe(dataset_points)
+arcpy.AddMessage(f"The new points shapefile Coordinate System is: {dsc_points['spatialReference'].name}")
+print(f"The new points shapefile Coordinate System is: {dsc_points['spatialReference'].name}")
