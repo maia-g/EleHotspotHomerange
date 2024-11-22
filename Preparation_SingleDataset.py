@@ -19,16 +19,16 @@ import arcpy
 
 # Allow user input for scratch workspace, output workspace, and dataset.
 ##### UNCOMMENT BELOW WHEN READY TO GO IN ARCPRO###############
-# dataset = arcpy.GetParameterAsText(0) #User input in ArcPro
-# scratch = arcpy.GetParameterAsText(1) #Sets scratch workspace where most interim model outputs will go
-# gdb = arcpy.GetParameterAsText(2) #Sets geodatabase where important outputs from model will go
-dataset = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Data\\Batoka_move_SubsetDry_Sept_Nov.xlsx" 
-scratch = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Scratch"
-gdb = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Final859_mhg29.gdb"
+dataset = arcpy.GetParameterAsText(0) #User input in ArcPro
+scratch = arcpy.GetParameterAsText(1) #Sets scratch workspace where most interim model outputs will go
+gdb = arcpy.GetParameterAsText(2) #Sets geodatabase where important outputs from model will go
+# dataset = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Data\\Batoka_move_SubsetDry_Sept_Nov.xlsx" 
+# scratch = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Scratch"
+# gdb = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Final859_mhg29.gdb"
 name = (os.path.basename(dataset).split('_')[0] + "_" + 
         "_".join(os.path.basename(dataset).split('_')[3:]).split('.')[0])  
     #Save only the ele name and the months of data
-print(name)
+#print(name)
 
 # Set environment settings
 arcpy.env.overwriteOutput = True #Make sure to exit interaction window in VS Code before re-running code

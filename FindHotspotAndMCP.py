@@ -20,10 +20,10 @@ import arcpy
 
 # Allow user input for scratch workspace, output workspace, and dataset.
 ##### UNCOMMENT BELOW WHEN READY TO GO IN ARCPRO###############
-# scratch = arcpy.GetParameterAsText(0) #Sets scratch workspace where most interim model outputs will go
-# gdb = arcpy.GetParameterAsText(1) #Sets output workspace where important outputs from model will go
-scratch = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Scratch"
-gdb = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Final859_mhg29.gdb"
+scratch = arcpy.GetParameterAsText(0) #Sets scratch workspace where most interim model outputs will go
+gdb = arcpy.GetParameterAsText(1) #Sets output workspace where important outputs from model will go
+# scratch = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Scratch"
+# gdb = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Final859_mhg29.gdb"
 
 # Set environment settings
 arcpy.env.overwriteOutput = True #Make sure to exit interaction window in VS Code before re-running code
@@ -31,22 +31,22 @@ arcpy.EnvManager(scratchWorkspace= scratch, workspace= gdb)
 arcpy.env.outputCoordinateSystem = arcpy.SpatialReference("WGS_1984_UTM_Zone_35S")
 
 ##### UNCOMMENT BELOW WHEN READY TO GO IN ARCPRO###############
-# dataset = arcpy.GetParameterAsText(2) #User input in ArcPro should be the POINTS file
-dataset = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Scratch\\Batoka_Sept_Nov_Points.shp"
+dataset = arcpy.GetParameterAsText(2) #User input in ArcPro should be the POINTS file
+###dataset = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Scratch\\Batoka_Sept_Nov_Points.shp"
 name = os.path.basename(dataset).split('.')[0].replace("_Points", "")  
     #Save only the ele name and the months of data
-print(name)
+#print(name)
 
 # Create bounding box/extent with user input
 ##### UNCOMMENT BELOW WHEN READY TO GO IN ARCPRO###############
-# topLat = arcpy.GetParameterAsText(3) #User input in ArcPro
-# bottomLat = arcpy.GetParameterAsText(4) #User input in ArcPro
-# leftLon = arcpy.GetParameterAsText(5) #User input in ArcPro
-# rightLon = arcpy.GetParameterAsText(6) #User input in ArcPro
-topLat = -15.55
-bottomLat = -26.00
-leftLon = 25.75
-rightLon = 26.15
+topLat = arcpy.GetParameterAsText(3) #User input in ArcPro
+bottomLat = arcpy.GetParameterAsText(4) #User input in ArcPro
+leftLon = arcpy.GetParameterAsText(5) #User input in ArcPro
+rightLon = arcpy.GetParameterAsText(6) #User input in ArcPro
+# topLat = -15.55
+# bottomLat = -26.00
+# leftLon = 25.75
+# rightLon = 26.15
 
 ##------Remove Outliers and Create Tessellation------
 

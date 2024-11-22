@@ -19,13 +19,13 @@ import arcpy
 
 # Allow user input for scratch workspace, output workspace, and dataset.
 ##### UNCOMMENT BELOW WHEN READY TO GO IN ARCPRO###############
-# datasets = arcpy.GetParameterAsText(0) #User input(s) in ArcPro
-# scratch = arcpy.GetParameterAsText(1) #Sets scratch workspace where most interim model outputs will go
-# gdb = arcpy.GetParameterAsText(2) #Sets geodatabase where important outputs from model will go
-# suffix = arcpy.GetParameterAsText(3) #Get user input for suffix to attach to Merge name
-scratch = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Scratch"
-gdb = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Final859_mhg29.gdb"
-suffix = "MG"
+datasets = arcpy.GetParameterAsText(0) #User input(s) in ArcPro
+scratch = arcpy.GetParameterAsText(1) #Sets scratch workspace where most interim model outputs will go
+gdb = arcpy.GetParameterAsText(2) #Sets geodatabase where important outputs from model will go
+suffix = arcpy.GetParameterAsText(3) #Get user input for suffix to attach to Merge name
+# scratch = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Scratch"
+# gdb = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Final859_mhg29.gdb"
+# suffix = "MG"
 
 # Set up environment
 arcpy.env.overwriteOutput = True
@@ -36,9 +36,9 @@ arcpy.env.outputCoordinateSystem = arcpy.SpatialReference("WGS_1984_UTM_Zone_35S
 
 # Get the list of datasets (e.g., feature classes or shapefiles)
 ###comment out this chunk###
-arcpy.env.workspace = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Data"
-datasets = arcpy.ListFiles("*.xlsx") #.xlxs files only
-print(datasets)
+# arcpy.env.workspace = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Data"
+# datasets = arcpy.ListFiles("*.xlsx") #.xlxs files only
+# print(datasets)
 ###Comment out this chunk###
 
 names = [] #create empty list for indiv names
