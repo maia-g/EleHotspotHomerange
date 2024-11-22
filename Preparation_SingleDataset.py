@@ -22,10 +22,13 @@ import arcpy
 # dataset = arcpy.GetParameterAsText(0) #User input in ArcPro
 # scratch = arcpy.GetParameterAsText(1) #Sets scratch workspace where most interim model outputs will go
 # output = arcpy.GetParameterAsText(2) #Sets output workspace where important outputs from model will go
-dataset = "V:\\859FinalProject_mhg29\\BassConnections_OrphanHotspots\\Data\\Orphan_Ele_Movement_Data\\Batoka_move_SubsetDry_Sept_Nov.xlsx" 
-scratch = "V:\\859FinalProject_mhg29\\BassConnections_OrphanHotspots\\Scratch"
-output = "V:\\859FinalProject_mhg29\\BassConnections_OrphanHotspots\\BassConnections_OrphanHotspots.gdb"
-name = os.path.splitext(os.path.basename(dataset))[0] #Save only the base file name
+dataset = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Data\\Batoka_move_SubsetDry_Sept_Nov.xlsx" 
+scratch = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Scratch"
+output = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Final859_mhg29.gdb"
+name = (os.path.basename(dataset).split('_')[0] + "_" + 
+        "_".join(os.path.basename(dataset).split('_')[3:]).split('.')[0])  
+    #Save only the ele name and the months of data
+print(name)
 
 # Set environment settings
 arcpy.env.overwriteOutput = True #Make sure to exit interaction window in VS Code before re-running code
@@ -42,7 +45,7 @@ dsc_dataset = arcpy.da.Describe(dataset) #Creating the "Describe" object
 arcpy.AddMessage(f"The dataset's catalog path is: {dsc_dataset['catalogPath']}")
 arcpy.AddMessage(f"The outputs path is: {output}")
 arcpy.AddMessage(f"The scratch folder path is: {scratch}")
-###print(f"The dataset's catalog path is: {dsc['catalogPath']}")
+###print(f"The dataset's catalog path is: {dsc_dataset['catalogPath']}")
 
 ##------Begin Processing------
 
@@ -50,8 +53,8 @@ arcpy.AddMessage(f"The scratch folder path is: {scratch}")
 Output_Table = f"{scratch}\\{name}_Table.dbf"
 arcpy.conversion.ExcelToTable(Input_Excel_File= dataset, Output_Table= Output_Table)
 
-# Convert new table into points and save to Outputs folder using: XY Table To Point
-dataset_points = f"{output}\\{name}_Points.shp"
+# Convert new table into points and save to Scratch folder using: XY Table To Point
+dataset_points = f"{scratch}\\{name}_Points.shp"
 arcpy.management.XYTableToPoint(in_table= Output_Table, 
                                 out_feature_class= dataset_points, 
                                 x_field="Longitude", y_field="Latitude")
@@ -59,4 +62,4 @@ arcpy.management.XYTableToPoint(in_table= Output_Table,
     # Check the spatial reference of the new shapefile
 dsc_points = arcpy.da.Describe(dataset_points)
 arcpy.AddMessage(f"The new points shapefile Coordinate System is: {dsc_points['spatialReference'].name}")
-#print(f"The new points shapefile Coordinate System is: {dsc_points['spatialReference'].name}")
+###print(f"The new points shapefile Coordinate System is: {dsc_points['spatialReference'].name}")
