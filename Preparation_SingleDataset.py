@@ -59,7 +59,19 @@ arcpy.management.XYTableToPoint(in_table= Output_Table,
                                 out_feature_class= dataset_points, 
                                 x_field="Longitude", y_field="Latitude")
 
-    # Check the spatial reference of the new shapefile
+# Check the spatial reference of the new shapefile and project if needed
 dsc_points = arcpy.da.Describe(dataset_points)
-arcpy.AddMessage(f"The new points shapefile Coordinate System is: {dsc_points['spatialReference'].name}")
-###print(f"The new points shapefile Coordinate System is: {dsc_points['spatialReference'].name}")
+spaRef = dsc_points['spatialReference'].name
+
+if spaRef == "WGS_1984_UTM_Zone_35S":
+    arcpy.AddMessage(f"The new points shapefile Coordinate System is: {dsc_points['spatialReference'].name}")
+    print(f"The new points shapefile Coordinate System is:{dsc_points['spatialReference'].name}")
+else:
+    arcpy.management.Project(in_dataset= dataset_points,
+                             out_dataset= dataset_points,
+                             out_coor_system = "WGS_1984_UTM_Zone_35S")
+    
+    arcpy.AddMessage(f"The points file was reprojected to: {dsc_points['spatialReference'].name}")
+    print(f"The new points file was reprojected to: {dsc_points['spatialReference'].name}")
+
+
