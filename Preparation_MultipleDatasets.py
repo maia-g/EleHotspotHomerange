@@ -1,10 +1,10 @@
 ##---------------------------------------------------------------------
-## Preparation_SingleDataset.py
+## Preparation_MultipleDatasets.py
 ##
-## Description: Select data to be prepared for hot spot analysis
+## Description: Select multiple data files to be prepared for hot spot analysis
 ##
 ## Usage: Transform Excel to Table (.dbf), make points from the XY coordinates,
-# #       and check the coordinate system.
+# #       and check the coordinate system of multiple files.
 ##
 ## Created: Fall 2024
 ## Author: maia.griffith@duke.edu (for ENV859)
@@ -19,12 +19,43 @@ import arcpy
 
 # Allow user input for scratch workspace, output workspace, and dataset.
 ##### UNCOMMENT BELOW WHEN READY TO GO IN ARCPRO###############
-# dataset = arcpy.GetParameterAsText(0) #User input in ArcPro
+# datasets = arcpy.GetParameterAsText(0) #User input(s) in ArcPro
 # scratch = arcpy.GetParameterAsText(1) #Sets scratch workspace where most interim model outputs will go
 # gdb = arcpy.GetParameterAsText(2) #Sets geodatabase where important outputs from model will go
-dataset = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Data\\Batoka_move_SubsetDry_Sept_Nov.xlsx" 
 scratch = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Scratch"
 gdb = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Final859_mhg29.gdb"
+
+# Get the list of datasets (e.g., feature classes or shapefiles)
+arcpy.env.workspace = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Data"
+datasets = arcpy.ListFiles("*.xlsx") #.xlxs files only
+print(datasets)
+names = [] #create empty list
+# Check if any datasets were selected
+if datasets:
+    arcpy.AddMessage(f"Number of datasets selected: {len(datasets)}")
+   
+    # Iterate through each selected dataset
+    for dataset in datasets:
+        arcpy.AddMessage(f"Processing dataset: {dataset}")
+        
+        # Save name of elephant and months of data
+        name = (os.path.basename(dataset).split('_')[0] + "_" + 
+        "_".join(os.path.basename(dataset).split('_')[3:]).split('.')[0])  
+        
+        # Append extracted name to full list "names"
+        names.append(name)
+        
+
+else:
+    arcpy.AddError("No datasets were selected!")
+
+# Print list of collected names
+arcpy.AddMessage(f"All extracted names: {names}")
+print(f"All extracted names: {names}")
+
+
+
+
 name = (os.path.basename(dataset).split('_')[0] + "_" + 
         "_".join(os.path.basename(dataset).split('_')[3:]).split('.')[0])  
     #Save only the ele name and the months of data

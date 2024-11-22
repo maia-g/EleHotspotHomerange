@@ -21,13 +21,13 @@ import arcpy
 # Allow user input for scratch workspace, output workspace, and dataset.
 ##### UNCOMMENT BELOW WHEN READY TO GO IN ARCPRO###############
 # scratch = arcpy.GetParameterAsText(0) #Sets scratch workspace where most interim model outputs will go
-# output = arcpy.GetParameterAsText(1) #Sets output workspace where important outputs from model will go
+# gdb = arcpy.GetParameterAsText(1) #Sets output workspace where important outputs from model will go
 scratch = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Scratch"
-output = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Final859_mhg29.gdb"
+gdb = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Final859_mhg29.gdb"
 
 # Set environment settings
 arcpy.env.overwriteOutput = True #Make sure to exit interaction window in VS Code before re-running code
-arcpy.EnvManager(scratchWorkspace= scratch, workspace= output)
+arcpy.EnvManager(scratchWorkspace= scratch, workspace= gdb)
 arcpy.env.outputCoordinateSystem = arcpy.SpatialReference("WGS_1984_UTM_Zone_35S")
 
 ##### UNCOMMENT BELOW WHEN READY TO GO IN ARCPRO###############
@@ -76,7 +76,7 @@ arcpy.management.GenerateTessellation(Output_Feature_Class= hexGrid,
 ##------Find Hotspots and Home Range------
 
 # Calculate total count per hexagon using: Summarize Within
-dataHotspot = f"{output}\\{name}_HS"
+dataHotspot = f"{gdb}\\{name}_HS"
 Output_Grouped_Table = ""
 arcpy.analysis.SummarizeWithin(in_polygons=hexGrid,
                                in_sum_features=selectedPoints,
@@ -85,7 +85,7 @@ arcpy.analysis.SummarizeWithin(in_polygons=hexGrid,
                                out_group_table=Output_Grouped_Table)
 
 # Find home range determined by MCPs using: Minimum Bounding Geometry
-dataMCP = f"{output}\\{name}_MCP"
+dataMCP = f"{gdb}\\{name}_MCP"
 arcpy.management.MinimumBoundingGeometry(in_features=selectedPoints, 
                                          out_feature_class=dataMCP, 
                                          geometry_type="CONVEX_HULL")
