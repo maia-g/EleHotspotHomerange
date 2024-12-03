@@ -120,3 +120,18 @@ else:
     dsc_repro = arcpy.da.Describe(reprojected)
     arcpy.AddMessage(f"The merged points file was reprojected to: {dsc_repro['spatialReference'].name}")
     print(f"The merged points file was reprojected to: {dsc_repro['spatialReference'].name}")
+
+##------Create Polyline from Points File------
+
+# Convert points into polyline file and save to Geodatabase using: Coordinate Table to Point
+merged_lines = f"{gdb}\\Merged_Lines{suffix}"
+arcpy.defense.CoordinateTableToPolyline(
+    in_table= merged_points,
+    out_feature_class= merged_lines,
+    x_or_lon_field="Longitude",
+    in_coordinate_format="DD_2",
+    y_or_lat_field="Latitude",
+    line_group_field="Tag",
+    sort_field="Time_Stamp",
+    coordinate_system= arcpy.SpatialReference(32735)
+)

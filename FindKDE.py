@@ -1,8 +1,8 @@
 ##---------------------------------------------------------------------
-## ElephantHotSpotandMCP.py
+## FindKDE.py
 ##
 ## Description: Read in elephant collar tracking data and create a
-##    hot spot visualization using hexagons and home range using Minimum Convex Polygons
+##              home range using Kernel Density Estimates
 ##
 ## Usage: Analyze elephant movement spatially
 ##

@@ -31,18 +31,19 @@ arcpy.EnvManager(scratchWorkspace= scratch, workspace= gdb)
 arcpy.env.outputCoordinateSystem = arcpy.SpatialReference("WGS_1984_UTM_Zone_35S")
 
 ##### UNCOMMENT BELOW WHEN READY TO GO IN ARCPRO###############
-dataset = arcpy.GetParameterAsText(2) #User input in ArcPro should be the POINTS file
+data_points = arcpy.GetParameterAsText(2) #User input in ArcPro should be the POINTS file
+data_lines = arcpy.GetParameterAsText(3) #User input in ArcPro should be the POLYLINE file
 ###dataset = "V:\\859FinalProject_mhg29\\Final859_mhg29\\Scratch\\Batoka_Sept_Nov_Points.shp"
-name = os.path.basename(dataset).split('.')[0].replace("_Points", "")  
+name = os.path.basename(data_points).split('.')[0].replace("_Points", "")  
     #Save only the ele name and the months of data
 #print(name)
 
 # Create bounding box/extent with user input
 ##### UNCOMMENT BELOW WHEN READY TO GO IN ARCPRO###############
-topLat = arcpy.GetParameterAsText(3) #User input in ArcPro
-bottomLat = arcpy.GetParameterAsText(4) #User input in ArcPro
-leftLon = arcpy.GetParameterAsText(5) #User input in ArcPro
-rightLon = arcpy.GetParameterAsText(6) #User input in ArcPro
+topLat = arcpy.GetParameterAsText(4) #User input in ArcPro
+bottomLat = arcpy.GetParameterAsText(5) #User input in ArcPro
+leftLon = arcpy.GetParameterAsText(6) #User input in ArcPro
+rightLon = arcpy.GetParameterAsText(7) #User input in ArcPro
 # topLat = -15.55
 # bottomLat = -26.00
 # leftLon = 25.75
@@ -50,16 +51,31 @@ rightLon = arcpy.GetParameterAsText(6) #User input in ArcPro
 
 ##------Remove Outliers and Create Tessellation------
 
-# Remove outliers by only keeping data within bounding box using: Select
-selectedPoints = f"{scratch}\\{name}_Select.shp"
+# Create bounding box to remove outliers
 bounds = f""" Latitude < {topLat} AND
               Latitude > {bottomLat} AND 
               Longitude > {leftLon} AND 
               Longitude < {rightLon} 
           """
-arcpy.analysis.Select(in_features= dataset, 
+
+# Remove outliers for Points by only keeping data within bounding box using: Select
+selectedPoints = f"{scratch}\\{name}_PointSelect.shp"
+arcpy.analysis.Select(in_features= data_points, 
                       out_feature_class= selectedPoints, 
                       where_clause= bounds)
+
+# Recreate polyline shapefile from selected points and save to Geodatabase using: Coordinate Table to Point
+selectedLines = f"{gdb}\\{name}_LineSelect"
+arcpy.defense.CoordinateTableToPolyline(
+    in_table= selectedPoints,
+    out_feature_class= selectedLines,
+    x_or_lon_field="Longitude",
+    in_coordinate_format="DD_2",
+    y_or_lat_field="Latitude",
+    line_group_field="Tag",
+    sort_field="Time_Stamp",
+    coordinate_system= arcpy.SpatialReference(32735)
+)
 
 # Create hexagons using: Generate Tessellation
 hexGrid = f"{scratch}\\HexGrid_1km.shp"

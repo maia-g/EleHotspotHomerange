@@ -74,4 +74,32 @@ else:
     arcpy.AddMessage(f"The points file was reprojected to: {dsc_points['spatialReference'].name}")
     print(f"The new points file was reprojected to: {dsc_points['spatialReference'].name}")
 
+##------Create Polyline from Points File------
+
+# Convert points into polyline file and save to Geodatabase using: Coordinate Table to Point
+dataset_lines = f"{gdb}\\{name}_Lines"
+arcpy.defense.CoordinateTableToPolyline(
+    in_table= dataset_points,
+    out_feature_class= dataset_lines,
+    x_or_lon_field="Longitude",
+    in_coordinate_format="DD_2",
+    y_or_lat_field="Latitude",
+    line_group_field="Tag",
+    sort_field="Time_Stamp",
+    coordinate_system= arcpy.SpatialReference(32735)
+)
+
+###### MAYBE TRY WITH POINT TO LINE TOOL INSTEAD####
+arcpy.management.PointsToLine(
+    Input_Features="kavala_Sept_Nov_Points",
+    Output_Feature_Class=r"V:\859FinalProject_mhg29\Final859_mhg29\Final859_mhg29.gdb\kavala_Sept_Nov_LinesNEWTOOL",
+    Line_Field="Tag",
+    Sort_Field="Time_Stamp",
+    Close_Line="NO_CLOSE",
+    Line_Construction_Method="TWO_POINT",
+    Attribute_Source="BOTH_ENDS",
+    Transfer_Fields="Latitude;Longitude;Time_Stamp;Date;Time;Month;Log_Interv;Speed;Temperatur;Movement;Accelerome"
+)
+
+
 
